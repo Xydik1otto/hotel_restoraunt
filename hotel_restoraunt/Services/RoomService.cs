@@ -3,13 +3,31 @@ using hotel_restoraunt.Services.Interfaces;
 
 namespace hotel_restoraunt.Services;
 
-public class RoomService : IRoomService
+public class RoomService: IRoomService
 {
-    private readonly List<Room> _rooms = new();
+    private readonly List<Room> _rooms;
 
-    public List<Room> GetAllRooms() => _rooms;
+    public RoomService()
+    {
+        _rooms = new List<Room>();
+    }
 
-    public void AddRoom(Room room) => _rooms.Add(room);
+    public void AddRoom(Room room)
+    {
+        _rooms.Add(room);
+    }
 
-    public void RemoveRoom(Room room) => _rooms.Remove(room);
+    public List<Room> GetAvailableRooms()
+    {
+        return _rooms.Where(r => r.IsAvailable).ToList();
+    }
+
+    public Room? FindRoomById(int id)
+    {
+        return _rooms.FirstOrDefault(r => r.Id == id);
+    }
+    public IEnumerable<Room> GetAllRooms()
+    {
+        return _rooms;
+    }
 }

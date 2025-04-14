@@ -5,11 +5,25 @@ namespace hotel_restoraunt.Services;
 
 public class ReservationService : IReservationService
 {
-    private readonly List<Reservation> _reservations = new();
+    private readonly List<Reservation> _reservations;
 
-    public void CreateReservation(Reservation reservation) => _reservations.Add(reservation);
+    public ReservationService()
+    {
+        _reservations = new List<Reservation>();
+    }
 
-    public List<Reservation> GetAllReservations() => _reservations;
+    public void AddReservation(Reservation reservation)
+    {
+        _reservations.Add(reservation);
+    }
 
-    public void CancelReservation(Reservation reservation) => _reservations.Remove(reservation);
+    public List<Reservation> GetAllReservations()
+    {
+        return _reservations;
+    }
+
+    public Reservation? FindReservationById(int id)
+    {
+        return _reservations.FirstOrDefault(r => r.Id == id);
+    }
 }

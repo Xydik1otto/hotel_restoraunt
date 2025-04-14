@@ -1,0 +1,13 @@
+<Window x:Class="hotel_restoraunt.Views.MainMenuView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Головне меню" Height="300" Width="400">
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Content="Бронювання" Command="{Binding OpenReservationsViewCommand}" Width="200" Margin="10"/>
+            <Button Content="Користувачі" Command="{Binding OpenUsersViewCommand}" Width="200" Margin="10"/>
+            <Button Content="Номери" Command="{Binding OpenRoomsViewCommand}" Width="200" Margin="10"/>
+            <Button Content="Гості" Command="{Binding OpenGuestsViewCommand}" Width="200" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</Window>

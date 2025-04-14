@@ -4,8 +4,8 @@ namespace hotel_restoraunt.Services.Interfaces
 {
     public interface IReservationService
     {
+        void AddReservation(Reservation reservation);
         List<Reservation> GetAllReservations();
-        void CreateReservation(Reservation reservation);
-        void CancelReservation(Reservation reservation);
+        Reservation? FindReservationById(int id);
     }
 }

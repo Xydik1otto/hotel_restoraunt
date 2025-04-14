@@ -7,43 +7,51 @@ using hotel_restoraunt.Services.Interfaces;
 using hotel_restoraunt.ViewModels;
 using hotel_restoraunt.Views;
 using Microsoft.EntityFrameworkCore;
+
 namespace hotel_restoraunt
 {
     public partial class App : Application
     {
         private readonly ServiceProvider _serviceProvider;
 
-        public static ServiceProvider ServiceProvider { get; private set; } // Додано для доступу
+        public static ServiceProvider ServiceProvider { get; private set; }
 
         public App()
         {
             var services = new ServiceCollection();
             ConfigureServices(services);
             _serviceProvider = services.BuildServiceProvider();
-            ServiceProvider = _serviceProvider; // Ініціалізація
+            ServiceProvider = _serviceProvider;
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // Налаштування ваших сервісів
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=hotel.db"));
+            // База даних
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlite("Data Source=hotel.db"));
+
+            // Сервіси
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IUserService, UserService>();
 
-            // Додати ViewModels
+            // ViewModels
             services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<LoginViewModel>();
+            services.AddTransient<MainMenuViewModel>();
 
+            // Views
             services.AddSingleton<MainWindow>();
+            services.AddTransient<MainMenuView>();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-        
-            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+
+            // Запускаємо MainMenuView замість MainWindow, якщо потрібно
+            var mainMenu = _serviceProvider.GetRequiredService<MainMenuView>();
+            mainMenu.Show();
         }
     }
-
 }

@@ -20,5 +20,7 @@ namespace hotel_restoraunt.Commands
 
         public bool CanExecute(object parameter) => _canExecute == null || _canExecute();
         public void Execute(object parameter) => _execute();
+        public void RaiseCanExecuteChanged() =>
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

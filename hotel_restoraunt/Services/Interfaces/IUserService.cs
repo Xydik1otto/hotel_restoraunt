@@ -4,5 +4,9 @@ namespace hotel_restoraunt.Services.Interfaces;
 
 public interface IUserService
 {
-    User? Authenticate(string username, string password);
+    void AddUser(User user);
+    User? GetUserByEmail(string email);
+    List<User> GetAllUsers();
+    void UpdateUser(User user);
+    void DeleteUser(int userId);
 }

@@ -7,39 +7,78 @@ using hotel_restoraunt.Services.Interfaces;
 using System.Runtime.CompilerServices;
 
 
+
 namespace hotel_restoraunt.ViewModels;
 
 public class ReservationViewModel : INotifyPropertyChanged
-{
-    private readonly IReservationService _reservationService;
-
-    public ObservableCollection<Reservation> Reservations { get; set; }
-    public Reservation SelectedReservation { get; set; }
-
-    public ICommand CreateCommand { get; }
-    public ICommand UpdateCommand { get; }
-    public ICommand DeleteCommand { get; }
-
-    public ReservationViewModel(IReservationService reservationService)
     {
-        _reservationService = reservationService;
-        Reservations = new ObservableCollection<Reservation>(_reservationService.GetAllReservations());
+        private readonly IGuestService _guestService;
+        private readonly IRoomService _roomService;
+        private readonly IReservationService _reservationService;
 
-        CreateCommand = new RelayCommand(CreateReservation);
-        UpdateCommand = new RelayCommand(UpdateReservation);
-        DeleteCommand = new RelayCommand(DeleteReservation);
+        public ObservableCollection<Guest> Guests { get; set; } = new();
+        public ObservableCollection<Room> Rooms { get; set; } = new();
+
+        private Guest _selectedGuest;
+        public Guest SelectedGuest
+        {
+            get => _selectedGuest;
+            set { _selectedGuest = value; OnPropertyChanged(); }
+        }
+
+        private Room _selectedRoom;
+        public Room SelectedRoom
+        {
+            get => _selectedRoom;
+            set { _selectedRoom = value; OnPropertyChanged(); }
+        }
+
+        public DateTime CheckInDate { get; set; } = DateTime.Today;
+        public DateTime CheckOutDate { get; set; } = DateTime.Today.AddDays(1);
+
+        public ICommand AddReservationCommand { get; }
+
+        public ReservationViewModel(IGuestService guestService, IRoomService roomService, IReservationService reservationService)
+        {
+            _guestService = guestService;
+            _roomService = roomService;
+            _reservationService = reservationService;
+
+            AddReservationCommand = new RelayCommand(AddReservation);
+
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            Guests.Clear();
+            foreach (var guest in _guestService.GetAllGuests())
+                Guests.Add(guest);
+
+            Rooms.Clear();
+            foreach (var room in _roomService.GetAllRooms())
+                Rooms.Add(room);
+        }
+
+        private void AddReservation()
+        {
+            if (SelectedGuest == null || SelectedRoom == null) return;
+
+            var reservation = new Reservation
+            {
+                Guest = SelectedGuest,
+                Room = SelectedRoom,
+                CheckInDate = CheckInDate,
+                CheckOutDate = CheckOutDate
+            };
+
+            _reservationService.AddReservation(reservation);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
     }
-
-    private void CreateReservation() { /* Логіка для створення бронювання */ }
-    private void UpdateReservation() { /* Логіка для редагування бронювання */ }
-    private void DeleteReservation() { /* Логіка для видалення бронювання */ }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-}
-
 

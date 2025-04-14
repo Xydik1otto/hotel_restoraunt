@@ -1,5 +1,14 @@
 ﻿<Application x:Class="hotel_restoraunt.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Усі ресурси, але без StartupUri -->
+    <Application.Resources>
+        <Style x:Key="PlaceholderTextBox" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Foreground" Value="Gray"/>
+                    <Setter Property="Text" Value="{Binding Placeholder}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
 </Application>

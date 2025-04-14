@@ -4,8 +4,9 @@ namespace hotel_restoraunt.Services.Interfaces
 {
     public interface IRoomService
     {
-        List<Room> GetAllRooms();
         void AddRoom(Room room);
-        void RemoveRoom(Room room);
+        List<Room> GetAvailableRooms();
+        Room? FindRoomById(int id);
+        IEnumerable<Room> GetAllRooms();
     }
 }

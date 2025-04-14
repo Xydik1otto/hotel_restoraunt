@@ -6,47 +6,62 @@ using hotel_restoraunt.Models;
 using hotel_restoraunt.Services;
 using System.ComponentModel;
 using System.Windows.Input;
+using hotel_restoraunt.Commands;
 using hotel_restoraunt.Services.Interfaces;
+
+
+namespace hotel_restoraunt.ViewModels;
 
 public class RoomViewModel : INotifyPropertyChanged
 {
     private readonly IRoomService _roomService;
-    private string _selectedStatus;
 
-    public ObservableCollection<Room> Rooms { get; set; }
-    public ObservableCollection<Room> FilteredRooms { get; set; }
+    public ObservableCollection<Room> Rooms { get; set; } = new ObservableCollection<Room>();
 
-    public string SelectedStatus
+    private Room _newRoom = new Room();
+    public Room NewRoom
     {
-        get => _selectedStatus;
+        get => _newRoom;
         set
         {
-            _selectedStatus = value;
-            OnPropertyChanged(); // Оновлення даних у View
-            FilterRooms();
+            _newRoom = value;
+            OnPropertyChanged();
         }
     }
+
+    public ICommand AddRoomCommand { get; }
 
     public RoomViewModel(IRoomService roomService)
     {
         _roomService = roomService;
-        Rooms = new ObservableCollection<Room>(_roomService.GetAllRooms());
-        FilteredRooms = new ObservableCollection<Room>(Rooms);
+
+        AddRoomCommand = new RelayCommand(AddRoom);
+        LoadRooms();
     }
 
-    private void FilterRooms()
+    private void AddRoom()
     {
-        FilteredRooms.Clear();
-        foreach (var room in Rooms.Where(r => r.Status == SelectedStatus || SelectedStatus == "All"))
+        _roomService.AddRoom(NewRoom);
+        Rooms.Add(new Room
         {
-            FilteredRooms.Add(room);
+            RoomNumber = NewRoom.RoomNumber,
+            IsAvailable = NewRoom.IsAvailable
+        });
+        NewRoom = new Room(); // Очищення форми
+    }
+
+    private void LoadRooms()
+    {
+        Rooms.Clear();
+        foreach (var room in _roomService.GetAllRooms())
+        {
+            Rooms.Add(room);
         }
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

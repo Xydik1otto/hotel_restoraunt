@@ -1,16 +1,14 @@
 using System.Windows;
 using hotel_restoraunt.Services;
 using hotel_restoraunt.ViewModels;
-using Microsoft.Extensions.DependencyInjection; 
-
 
 namespace hotel_restoraunt.Views;
 
-public partial class RoomView : Window
+public partial class GuestView : Window
 {
-    public RoomView()
+    public GuestView()
     {
         InitializeComponent();
-        DataContext = new RoomViewModel(new RoomService());
+        DataContext = new GuestViewModel(new GuestService());
     }
 }

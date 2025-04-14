@@ -1,20 +1,26 @@
 <Window x:Class="hotel_restoraunt.Views.RoomView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Room Management" Height="450" Width="800">
-    <Grid>
-        <ComboBox x:Name="StatusComboBox" 
-                  SelectedItem="{Binding SelectedStatus}" 
-                  HorizontalAlignment="Left" 
-                  VerticalAlignment="Top" 
-                  Width="200" Margin="10">
-            <ComboBoxItem Content="All" />
-            <ComboBoxItem Content="Available" />
-            <ComboBoxItem Content="Occupied" />
-        </ComboBox>
+        Title="Rooms" Height="400" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <DataGrid ItemsSource="{Binding FilteredRooms}" AutoGenerateColumns="True" Margin="10,50,10,10"/>
+        <!-- Форма додавання -->
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+            <TextBox Width="100" Margin="5" Text="{Binding NewRoom.RoomNumber}" Style="{StaticResource PlaceholderTextBox}"/>
+            <CheckBox Content="Вільна" Margin="5" IsChecked="{Binding NewRoom.IsAvailable}" />
+            <Button Content="Додати" Margin="5" Command="{Binding AddRoomCommand}"/>
+        </StackPanel>
 
-        <Button Content="Add Room" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Height="30" Margin="10" Command="{Binding AddRoomCommand}"/>
+        <!-- Список номерів -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Rooms}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Номер" Binding="{Binding RoomNumber}"/>
+                <DataGridCheckBoxColumn Header="Вільна" Binding="{Binding IsAvailable}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
