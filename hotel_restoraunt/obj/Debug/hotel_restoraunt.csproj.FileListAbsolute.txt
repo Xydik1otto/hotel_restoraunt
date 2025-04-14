@@ -1,0 +1,9 @@
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\hotel_restoraunt.csproj.AssemblyReference.cache
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\MainWindow.baml
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\MainWindow.g.cs
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\App.g.cs
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\hotel_restoraunt_MarkupCompile.cache
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\hotel_restoraunt.g.resources
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\hotel_restoraunt.Properties.Resources.resources
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\hotel_restoraunt.csproj.GenerateResource.cache
+F:\JetBrains Projects\rider projects\hotel_restoraunt\hotel_restoraunt\obj\Debug\hotel_restoraunt.csproj.CoreCompileInputs.cache

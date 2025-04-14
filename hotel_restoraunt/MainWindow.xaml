@@ -1,0 +1,24 @@
+﻿<!-- Views/MainWindow.xaml -->
+<Window x:Class="HotelManager.WPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Hotel Manager" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <Button Content="Додати кімнату" Command="{Binding AddRoomCommand}" Margin="10"/>
+            <ListView ItemsSource="{Binding Rooms}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Номер" DisplayMemberBinding="{Binding Number}"/>
+                        <GridViewColumn Header="Тип" DisplayMemberBinding="{Binding Type}"/>
+                        <GridViewColumn Header="Ціна" DisplayMemberBinding="{Binding Price}"/>
+                        <GridViewColumn Header="Зайнято" DisplayMemberBinding="{Binding IsOccupied}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Window>
