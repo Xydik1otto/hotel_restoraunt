@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using hotel_restoraunt.Data;
 using hotel_restoraunt.Services;
+using hotel_restoraunt.Services.Interfaces;
 using hotel_restoraunt.ViewModels;
 using Microsoft.EntityFrameworkCore;
 namespace hotel_restoraunt

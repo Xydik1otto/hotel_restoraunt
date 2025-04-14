@@ -1,13 +1,11 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using hotel_restoraunt.Services.DTOs;
+using hotel_restoraunt.Models;
 
-namespace hotel_restoraunt.Services
+namespace hotel_restoraunt.Services.Interfaces
 {
     public interface IReservationService
     {
-        Task<bool> CreateReservation(ReservationDTO dto);
-        Task<List<ReservationDTO>> GetUserReservations(int userId);
-        Task CancelReservation(int reservationId);
+        List<Reservation> GetAllReservations();
+        void CreateReservation(Reservation reservation);
+        void CancelReservation(Reservation reservation);
     }
 }

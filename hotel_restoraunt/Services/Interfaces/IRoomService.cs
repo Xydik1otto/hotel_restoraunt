@@ -1,13 +1,11 @@
 using hotel_restoraunt.Models;
 
-namespace hotel_restoraunt.Services
+namespace hotel_restoraunt.Services.Interfaces
 {
     public interface IRoomService
     {
         List<Room> GetAllRooms();
-        Room GetRoomById(int id);
         void AddRoom(Room room);
-        void UpdateRoom(Room room);
-        void DeleteRoom(int id);
+        void RemoveRoom(Room room);
     }
 }

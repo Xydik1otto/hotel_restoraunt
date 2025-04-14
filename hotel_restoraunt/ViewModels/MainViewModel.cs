@@ -7,37 +7,15 @@ using hotel_restoraunt.Services;
 
 namespace hotel_restoraunt.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel
     {
-        private readonly HotelService _hotelService;
-        private ObservableCollection<Room> _rooms;
+        public ObservableCollection<Room> Rooms { get; }
+        private readonly RoomService _roomService;
 
-        public ObservableCollection<Room> Rooms
+        public MainWindowViewModel(RoomService roomService)
         {
-            get => _rooms;
-            set { _rooms = value; OnPropertyChanged(nameof(Rooms)); }
-        }
-
-        public RelayCommand AddRoomCommand { get; }
-
-        public MainViewModel(HotelService hotelService)
-        {
-            _hotelService = hotelService;
-            Rooms = new ObservableCollection<Room>(_hotelService.GetAllRooms());
-            AddRoomCommand = new RelayCommand(AddRoom);
-        }
-
-        private void AddRoom(object parameter)
-        {
-            var newRoom = new Room(101, "Standard", 100.0m); // Приклад
-            _hotelService.AddRoom(newRoom);
-            Rooms.Add(newRoom); // Оновлюємо UI через ObservableCollection
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _roomService = roomService;
+            Rooms = new ObservableCollection<Room>(_roomService.GetAllRooms());
         }
     }
 }

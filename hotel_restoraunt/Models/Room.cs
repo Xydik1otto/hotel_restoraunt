@@ -6,10 +6,15 @@ namespace hotel_restoraunt.Models
     public class Room
     {
         public int Id { get; set; }
-        public string Number { get; set; }
-        public RoomType Type { get; set; }
-        public decimal PricePerNight { get; set; }
-        public bool IsAvailable { get; set; }
-        public List<Reservation> Reservations { get; set; }
+        public string Name { get; set; }
+        public int Capacity { get; set; }
+
+        public Room(int id, string name, int capacity)
+        {
+            Id = id;
+            Name = name;
+            Capacity = capacity;
+        }
     }
+
 }

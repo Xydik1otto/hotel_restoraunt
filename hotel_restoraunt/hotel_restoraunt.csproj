@@ -31,7 +31,10 @@
         <Compile Include="Services\HotelService.cs" />
         <Compile Include="Services\Interfaces\IReservationService.cs" />
         <Compile Include="Services\Interfaces\IRoomService.cs" />
+        <Compile Include="Services\ReservationService.cs" />
+        <Compile Include="Services\RoomService.cs" />
         <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+        <Compile Include="ViewModels\LoginViewModel.cs" />
         <Compile Include="ViewModels\MainViewModel.cs" />
         <Compile Include="Models\Room.cs" />
 
@@ -41,6 +44,7 @@
             <SubType>Designer</SubType>
         </ApplicationDefinition>
         <Compile Include="ViewModels\MainWindow.xaml.cs" />
+        <Compile Include="View\LoginView.xaml.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -53,6 +57,7 @@
         <XamlRuntime>Wpf</XamlRuntime>
         <SubType>Designer</SubType>
       </Page>
+      <Page Include="View\LoginView.xaml" />
     </ItemGroup>
 
     <ItemGroup>
