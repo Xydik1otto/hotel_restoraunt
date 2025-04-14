@@ -10,34 +10,64 @@
         <AssemblyName>hotel_restoraunt</AssemblyName>
         <RootNamespace>hotel_restoraunt</RootNamespace>
         <Platforms>AnyCPU;x64</Platforms>
+
+        <!-- Вимкнути всі автоматичні включення -->
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <EnableDefaultPageItems>false</EnableDefaultPageItems>
+        <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Код -->
-        <Compile Include="Commands\RelayCommand.cs" />
-        <Compile Include="Services\HotelService.cs" />
-        <Compile Include="ViewModels\MainViewModel.cs" />
-        <Compile Include="Models\Room.cs" />
+        <!-- Компільовані файли -->
         <Compile Include="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
         </Compile>
-        <Compile Include="MainWindow.xaml.cs">
-            <DependentUpon>MainWindow.xaml</DependentUpon>
-        </Compile>
+        <Compile Include="Commands\RelayCommand.cs" />
+        <Compile Include="Data\AppDbContext.cs" />
+        <Compile Include="Models\Enums\RoomType.cs" />
+        <Compile Include="Models\Reservation.cs" />
+        <Compile Include="Models\User.cs" />
+        <Compile Include="Services\DTOs\ReservationDTO.cs" />
+        <Compile Include="Services\HotelService.cs" />
+        <Compile Include="Services\Interfaces\IReservationService.cs" />
+        <Compile Include="Services\Interfaces\IRoomService.cs" />
+        <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+        <Compile Include="ViewModels\MainViewModel.cs" />
+        <Compile Include="Models\Room.cs" />
 
-        <!-- WPF-ресурси -->
+        <!-- WPF ресурси -->
         <ApplicationDefinition Include="App.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
+        <Compile Include="ViewModels\MainWindow.xaml.cs" />
+    </ItemGroup>
 
-        <Page Include="MainWindow.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-
-        <!-- Додаткові файли -->
+    <ItemGroup>
         <None Include="App.config" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Include="ViewModels\MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+      <Folder Include="Services\Implementations\" />
+      <Folder Include="Utilities\" />
+      <Folder Include="View\Components\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
     </ItemGroup>
 
 </Project>
