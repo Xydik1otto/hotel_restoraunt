@@ -8,6 +8,7 @@ namespace hotel_restoraunt.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int Capacity { get; set; }
+        public string Status { get; set; }
 
         public Room(int id, string name, int capacity)
         {
