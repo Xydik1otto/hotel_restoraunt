@@ -7,9 +7,9 @@ namespace hotel_restoraunt.Services;
 
 public class BookingService : IBookingService
 {
-    private readonly AppDbContext _context;
+    private readonly DatabaseHelper _context;
 
-    public BookingService(AppDbContext context)
+    public BookingService(DatabaseHelper context)
     {
         _context = context;
     }
@@ -25,7 +25,7 @@ public class BookingService : IBookingService
     {
         return await _context.Bookings
             .Include(b => b.User)
-            .Include(b => b.Room)
+            .Include(b => b.HotelRoom)
             .ToListAsync();
     }
 
@@ -33,7 +33,7 @@ public class BookingService : IBookingService
     {
         return await _context.Bookings
             .Include(b => b.User)
-            .Include(b => b.Room)
+            .Include(b => b.HotelRoom)
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 

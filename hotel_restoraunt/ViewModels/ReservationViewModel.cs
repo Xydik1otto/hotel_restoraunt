@@ -17,7 +17,7 @@ public class ReservationViewModel : INotifyPropertyChanged
         private readonly IReservationService _reservationService;
 
         public ObservableCollection<Guest> Guests { get; set; } = new();
-        public ObservableCollection<Room> Rooms { get; set; } = new();
+        public ObservableCollection<HotelRoom> Rooms { get; set; } = new();
 
         private Guest _selectedGuest;
         public Guest SelectedGuest
@@ -26,11 +26,11 @@ public class ReservationViewModel : INotifyPropertyChanged
             set { _selectedGuest = value; OnPropertyChanged(); }
         }
 
-        private Room _selectedRoom;
-        public Room SelectedRoom
+        private HotelRoom _selectedHotelRoom;
+        public HotelRoom SelectedHotelRoom
         {
-            get => _selectedRoom;
-            set { _selectedRoom = value; OnPropertyChanged(); }
+            get => _selectedHotelRoom;
+            set { _selectedHotelRoom = value; OnPropertyChanged(); }
         }
 
         public DateTime CheckInDate { get; set; } = DateTime.Today;
@@ -62,12 +62,12 @@ public class ReservationViewModel : INotifyPropertyChanged
 
         private void AddReservation()
         {
-            if (SelectedGuest == null || SelectedRoom == null) return;
+            if (SelectedGuest == null || SelectedHotelRoom == null) return;
 
             var reservation = new Reservation
             {
                 Guest = SelectedGuest,
-                Room = SelectedRoom,
+                HotelRoom = SelectedHotelRoom,
                 CheckInDate = CheckInDate,
                 CheckOutDate = CheckOutDate
             };

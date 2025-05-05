@@ -16,15 +16,15 @@ public class RoomViewModel : INotifyPropertyChanged
 {
     private readonly IRoomService _roomService;
 
-    public ObservableCollection<Room> Rooms { get; set; } = new ObservableCollection<Room>();
+    public ObservableCollection<HotelRoom> Rooms { get; set; } = new ObservableCollection<HotelRoom>();
 
-    private Room _newRoom = new Room();
-    public Room NewRoom
+    private HotelRoom _newHotelRoom = new HotelRoom();
+    public HotelRoom NewHotelRoom
     {
-        get => _newRoom;
+        get => _newHotelRoom;
         set
         {
-            _newRoom = value;
+            _newHotelRoom = value;
             OnPropertyChanged();
         }
     }
@@ -41,13 +41,13 @@ public class RoomViewModel : INotifyPropertyChanged
 
     private void AddRoom()
     {
-        _roomService.AddRoom(NewRoom);
-        Rooms.Add(new Room
+        _roomService.AddRoom(NewHotelRoom);
+        Rooms.Add(new HotelRoom
         {
-            RoomNumber = NewRoom.RoomNumber,
-            IsAvailable = NewRoom.IsAvailable
+            RoomNumber = NewHotelRoom.RoomNumber,
+            IsAvailable = NewHotelRoom.IsAvailable
         });
-        NewRoom = new Room(); // Очищення форми
+        NewHotelRoom = new HotelRoom(); // Очищення форми
     }
 
     private void LoadRooms()

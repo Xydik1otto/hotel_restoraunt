@@ -5,7 +5,7 @@
     <Grid Margin="10">
         <StackPanel>
             <ComboBox ItemsSource="{Binding Guests}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGuest}" Margin="5" />
-            <ComboBox ItemsSource="{Binding Rooms}" DisplayMemberPath="Number" SelectedItem="{Binding SelectedRoom}" Margin="5" />
+            <ComboBox ItemsSource="{Binding Rooms}" DisplayMemberPath="Number" SelectedItem="{Binding SelectedHotelRoom}" Margin="5" />
 
             <DatePicker SelectedDate="{Binding CheckInDate}" Margin="5" />
             <DatePicker SelectedDate="{Binding CheckOutDate}" Margin="5" />

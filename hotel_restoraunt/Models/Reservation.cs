@@ -10,6 +10,6 @@ namespace hotel_restoraunt.Models
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public Guest Guest { get; set; }
-        public Room Room { get; set; }
+        public HotelRoom HotelRoom { get; set; }
     }
 }

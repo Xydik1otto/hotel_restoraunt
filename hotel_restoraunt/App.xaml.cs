@@ -27,7 +27,7 @@ namespace hotel_restoraunt
         private void ConfigureServices(IServiceCollection services)
         {
             // База даних
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<DatabaseHelper>(options =>
                 options.UseSql("Data Source=hotel.db"));
 
             // Сервіси
@@ -44,7 +44,7 @@ namespace hotel_restoraunt
             services.AddSingleton<MainWindow>();
             services.AddTransient<MainMenuView>();
             
-            services.AddDbContext<AppDbContext>();
+            services.AddDbContext<DatabaseHelper>();
             services.AddTransient<BookingService>();
             services.AddTransient<BookingViewModel>();
             services.AddTransient<IBookingService, BookingService>();

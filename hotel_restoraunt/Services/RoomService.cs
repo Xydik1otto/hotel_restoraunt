@@ -5,28 +5,28 @@ namespace hotel_restoraunt.Services;
 
 public class RoomService: IRoomService
 {
-    private readonly List<Room> _rooms;
+    private readonly List<HotelRoom> _rooms;
 
     public RoomService()
     {
-        _rooms = new List<Room>();
+        _rooms = new List<HotelRoom>();
     }
 
-    public void AddRoom(Room room)
+    public void AddRoom(HotelRoom hotelRoom)
     {
-        _rooms.Add(room);
+        _rooms.Add(hotelRoom);
     }
 
-    public List<Room> GetAvailableRooms()
+    public List<HotelRoom> GetAvailableRooms()
     {
         return _rooms.Where(r => r.IsAvailable).ToList();
     }
 
-    public Room? FindRoomById(int id)
+    public HotelRoom? FindRoomById(int id)
     {
         return _rooms.FirstOrDefault(r => r.Id == id);
     }
-    public IEnumerable<Room> GetAllRooms()
+    public IEnumerable<HotelRoom> GetAllRooms()
     {
         return _rooms;
     }

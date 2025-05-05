@@ -14,7 +14,7 @@
                   Grid.Row="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                <DataGridTextColumn Header="Кімната" Binding="{Binding Room.Name}" Width="*"/>
+                <DataGridTextColumn Header="Кімната" Binding="{Binding HotelRoom.Name}" Width="*"/>
                 <DataGridTextColumn Header="Гість" Binding="{Binding User.Username}" Width="*"/>
                 <DataGridTextColumn Header="Заїзд" Binding="{Binding CheckInDate, StringFormat=dd.MM.yyyy}" Width="*"/>
                 <DataGridTextColumn Header="Виїзд" Binding="{Binding CheckOutDate, StringFormat=dd.MM.yyyy}" Width="*"/>

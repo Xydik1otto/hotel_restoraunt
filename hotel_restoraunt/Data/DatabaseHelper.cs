@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace hotel_restoraunt.Data
 {
-    public class AppDbContext : DbContext
+    public class DatabaseHelper : DbContext
     {
         public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Room> Rooms { get; set; }
+        public DbSet<HotelRoom> Rooms { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

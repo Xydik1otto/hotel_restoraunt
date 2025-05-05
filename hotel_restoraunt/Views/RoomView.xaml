@@ -10,8 +10,8 @@
 
         <!-- Форма додавання -->
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-            <TextBox Width="100" Margin="5" Text="{Binding NewRoom.RoomNumber}" Style="{StaticResource PlaceholderTextBox}"/>
-            <CheckBox Content="Вільна" Margin="5" IsChecked="{Binding NewRoom.IsAvailable}" />
+            <TextBox Width="100" Margin="5" Text="{Binding NewHotelRoom.RoomNumber}" Style="{StaticResource PlaceholderTextBox}"/>
+            <CheckBox Content="Вільна" Margin="5" IsChecked="{Binding NewHotelRoom.IsAvailable}" />
             <Button Content="Додати" Margin="5" Command="{Binding AddRoomCommand}"/>
         </StackPanel>
 
