@@ -5,17 +5,16 @@ namespace hotel_restoraunt.Data
 {
     public class AppDbContext : DbContext
     {
+        public DbSet<Booking> Bookings { get; set; }
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<Reservation> Reservations { get; set; }
         public DbSet<User> Users { get; set; }
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=hotel.db");
+            optionsBuilder.UseMySql(
+                "server=localhost;database=hotel_restoraunt_db;user=root;password=;",
+                new MySqlServerVersion(new Version(10, 4, 24))
+            );
         }
     }
 }

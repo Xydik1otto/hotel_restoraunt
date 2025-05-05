@@ -28,7 +28,7 @@ namespace hotel_restoraunt
         {
             // База даних
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite("Data Source=hotel.db"));
+                options.UseSql("Data Source=hotel.db"));
 
             // Сервіси
             services.AddScoped<IRoomService, RoomService>();
@@ -43,13 +43,18 @@ namespace hotel_restoraunt
             // Views
             services.AddSingleton<MainWindow>();
             services.AddTransient<MainMenuView>();
+            
+            services.AddDbContext<AppDbContext>();
+            services.AddTransient<BookingService>();
+            services.AddTransient<BookingViewModel>();
+            services.AddTransient<IBookingService, BookingService>();
+            ServiceProvider = services.BuildServiceProvider();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            // Запускаємо MainMenuView замість MainWindow, якщо потрібно
+            
             var mainMenu = _serviceProvider.GetRequiredService<MainMenuView>();
             mainMenu.Show();
         }

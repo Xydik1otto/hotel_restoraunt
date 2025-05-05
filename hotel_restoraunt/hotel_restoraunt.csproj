@@ -24,14 +24,17 @@
         </Compile>
         <Compile Include="Commands\RelayCommand.cs" />
         <Compile Include="Data\AppDbContext.cs" />
+        <Compile Include="Models\Booking.cs" />
         <Compile Include="Models\Cleaner.cs" />
         <Compile Include="Models\Enums\RoomType.cs" />
         <Compile Include="Models\Guest.cs" />
         <Compile Include="Models\Reservation.cs" />
         <Compile Include="Models\User.cs" />
+        <Compile Include="Services\BookingService.cs" />
         <Compile Include="Services\DTOs\ReservationDTO.cs" />
         <Compile Include="Services\GuestService.cs" />
         <Compile Include="Services\HotelService.cs" />
+        <Compile Include="Services\Interfaces\IBookingService.cs" />
         <Compile Include="Services\Interfaces\IGuestService.cs" />
         <Compile Include="Services\Interfaces\IReservationService.cs" />
         <Compile Include="Services\Interfaces\IRoomService.cs" />
@@ -40,6 +43,7 @@
         <Compile Include="Services\RoomService.cs" />
         <Compile Include="Services\UserService.cs" />
         <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+        <Compile Include="ViewModels\BookingViewModel.cs" />
         <Compile Include="ViewModels\GuestViewModel.cs" />
         <Compile Include="ViewModels\LoginViewModel.cs" />
         <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -54,6 +58,7 @@
         <Compile Include="ViewModels\ReservationViewModel.cs" />
         <Compile Include="ViewModels\RoomViewModel.cs" />
         <Compile Include="ViewModels\UserViewModel.cs" />
+        <Compile Include="Views\BookingView.xaml.cs" />
         <Compile Include="Views\GuestView.xaml.cs" />
         <Compile Include="Views\LoginView.xaml.cs" />
         <Compile Include="Views\MainMenuView.xaml.cs" />
@@ -68,6 +73,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Page Include="Views\BookingView.xaml" />
       <Page Include="Views\GuestView.xaml" />
       <Page Include="Views\LoginView.xaml" />
       <Page Include="Views\MainMenuView.xaml" />
@@ -92,8 +98,12 @@
       <PackageReference Include="AutoMapper" Version="14.0.0" />
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
     </ItemGroup>
 
 </Project>
