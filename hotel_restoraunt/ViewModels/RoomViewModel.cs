@@ -1,67 +1,35 @@
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices; // Додано
 using hotel_restoraunt.Models;
-using hotel_restoraunt.Services;
-using System.ComponentModel;
-using System.Windows.Input;
-using hotel_restoraunt.Commands;
 using hotel_restoraunt.Services.Interfaces;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using hotel_restoraunt.Commands;
+using hotel_restoraunt.ViewModel.Base;
 
-
-namespace hotel_restoraunt.ViewModels;
-
-public class RoomViewModel : INotifyPropertyChanged
+namespace hotel_restoraunt.ViewModels
 {
-    private readonly IRoomService _roomService;
-
-    public ObservableCollection<HotelRoom> Rooms { get; set; } = new ObservableCollection<HotelRoom>();
-
-    private HotelRoom _newHotelRoom = new HotelRoom();
-    public HotelRoom NewHotelRoom
+    public class RoomViewModel : ViewModelBase
     {
-        get => _newHotelRoom;
-        set
+        private readonly IRoomService _roomService;
+        private ObservableCollection<HotelRoom> _rooms;
+        
+        public RoomViewModel(IRoomService roomService)
         {
-            _newHotelRoom = value;
-            OnPropertyChanged();
+            _roomService = roomService;
+            LoadRoomsCommand = new RelayCommand(async _ => await LoadRooms());
         }
-    }
 
-    public ICommand AddRoomCommand { get; }
-
-    public RoomViewModel(IRoomService roomService)
-    {
-        _roomService = roomService;
-
-        AddRoomCommand = new RelayCommand(AddRoom);
-        LoadRooms();
-    }
-
-    private void AddRoom()
-    {
-        _roomService.AddRoom(NewHotelRoom);
-        Rooms.Add(new HotelRoom
+        public ObservableCollection<HotelRoom> Rooms
         {
-            RoomNumber = NewHotelRoom.RoomNumber,
-            IsAvailable = NewHotelRoom.IsAvailable
-        });
-        NewHotelRoom = new HotelRoom(); // Очищення форми
-    }
-
-    private void LoadRooms()
-    {
-        Rooms.Clear();
-        foreach (var room in _roomService.GetAllRooms())
-        {
-            Rooms.Add(room);
+            get => _rooms;
+            set => SetField(ref _rooms, value);
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public RelayCommand LoadRoomsCommand { get; }
+
+        private async Task LoadRooms()
+        {
+            var rooms = await _roomService.GetAllRooms();
+            Rooms = new ObservableCollection<HotelRoom>(rooms);
+        }
     }
 }

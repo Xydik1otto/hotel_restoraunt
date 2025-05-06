@@ -1,78 +1,90 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using hotel_restoraunt.Commands;
 using hotel_restoraunt.Models;
 using hotel_restoraunt.Services.Interfaces;
-using System.Windows.Input;
 using System.Runtime.CompilerServices;
 
-namespace hotel_restoraunt.ViewModels;
-
-public class UserViewModel : INotifyPropertyChanged
+namespace hotel_restoraunt.ViewModels
 {
-    private readonly IUserService _userService;
-
-    public ObservableCollection<User> Users { get; set; } = new ObservableCollection<User>();
-
-    private User _newUser = new User();
-    public User NewUser
+    public class UserViewModel : INotifyPropertyChanged
     {
-        get => _newUser;
-        set
+        private readonly IUserService _userService;
+
+        public ObservableCollection<User> Users { get; } = new();
+
+        private User _selectedUser = new();
+        public User SelectedUser
         {
-            _newUser = value;
-            OnPropertyChanged();
+            get => _selectedUser;
+            set
+            {
+                _selectedUser = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
-    public ICommand AddUserCommand { get; }
-    public ICommand EditUserCommand { get; }
-    public ICommand DeleteUserCommand { get; }
+        public ICommand LoadUsersCommand { get; }
+        public ICommand AddUserCommand { get; }
+        public ICommand UpdateUserCommand { get; }
+        public ICommand DeleteUserCommand { get; }
 
-    public UserViewModel(IUserService userService)
-    {
-        _userService = userService;
-
-        AddUserCommand = new RelayCommand(AddUser);
-        EditUserCommand = new RelayCommand(EditUser);
-        DeleteUserCommand = new RelayCommand(DeleteUser);
-
-        LoadUsers();
-    }
-
-    private void LoadUsers()
-    {
-        Users.Clear();
-        foreach (var user in _userService.GetAllUsers())
+        public UserViewModel(IUserService userService)
         {
-            Users.Add(user);
+            _userService = userService;
+            
+            LoadUsersCommand = new RelayCommand(async _ => await LoadUsers());
+            AddUserCommand = new RelayCommand(async _ => await AddUser());
+            UpdateUserCommand = new RelayCommand(async _ => await UpdateUser());
+            DeleteUserCommand = new RelayCommand(async _ => await DeleteUser());
+            
+            LoadUsersCommand.Execute(null);
         }
-    }
 
-    private void AddUser()
-    {
-        _userService.AddUser(NewUser);
-        Users.Add(NewUser);
-        NewUser = new User(); // очистка форми
-    }
+        private async Task LoadUsers()
+        {
+            var users = await _userService.GetAllUsers();
+            Users.Clear();
+            foreach (var user in users)
+            {
+                Users.Add(user);
+            }
+        }
 
-    private void EditUser()
-    {
-        if (NewUser == null) return;
-        _userService.UpdateUser(NewUser);
-    }
+        private async Task AddUser()
+        {
+            if (string.IsNullOrEmpty(SelectedUser.Username) || 
+                string.IsNullOrEmpty(SelectedUser.PasswordHash))
+                return;
 
-    private void DeleteUser()
-    {
-        if (NewUser == null) return;
-        _userService.DeleteUser(NewUser.Id);
-        Users.Remove(NewUser);
-        NewUser = new User(); // очистка форми
-    }
+            await _userService.AddUser(SelectedUser);
+            await LoadUsers();
+            SelectedUser = new User();
+        }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private async Task UpdateUser()
+        {
+            if (SelectedUser.UserId == 0) return;
+            
+            await _userService.UpdateUser(SelectedUser);
+            await LoadUsers();
+        }
+
+        private async Task DeleteUser()
+        {
+            if (SelectedUser.UserId == 0) return;
+            
+            await _userService.DeleteUser(SelectedUser.UserId);
+            await LoadUsers();
+            SelectedUser = new User();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -1,84 +1,125 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using hotel_restoraunt.Commands;
 using hotel_restoraunt.Models;
 using hotel_restoraunt.Services.Interfaces;
 using System.Runtime.CompilerServices;
 
-
-
-namespace hotel_restoraunt.ViewModels;
-
-public class ReservationViewModel : INotifyPropertyChanged
+namespace hotel_restoraunt.ViewModels
+{
+    public class ReservationViewModel : INotifyPropertyChanged
     {
+        private readonly IReservationService _reservationService;
         private readonly IGuestService _guestService;
         private readonly IRoomService _roomService;
-        private readonly IReservationService _reservationService;
 
-        public ObservableCollection<Guest> Guests { get; set; } = new();
-        public ObservableCollection<HotelRoom> Rooms { get; set; } = new();
+        public ObservableCollection<Reservation> Reservations { get; } = new();
+        public ObservableCollection<Guest> Guests { get; } = new();
+        public ObservableCollection<HotelRoom> Rooms { get; } = new();
 
-        private Guest _selectedGuest;
-        public Guest SelectedGuest
+        private Reservation _selectedReservation = new();
+        public Reservation SelectedReservation
         {
-            get => _selectedGuest;
-            set { _selectedGuest = value; OnPropertyChanged(); }
+            get => _selectedReservation;
+            set
+            {
+                _selectedReservation = value;
+                OnPropertyChanged();
+            }
         }
 
-        private HotelRoom _selectedHotelRoom;
-        public HotelRoom SelectedHotelRoom
-        {
-            get => _selectedHotelRoom;
-            set { _selectedHotelRoom = value; OnPropertyChanged(); }
-        }
-
-        public DateTime CheckInDate { get; set; } = DateTime.Today;
-        public DateTime CheckOutDate { get; set; } = DateTime.Today.AddDays(1);
-
+        public ICommand LoadReservationsCommand { get; }
         public ICommand AddReservationCommand { get; }
+        public ICommand UpdateReservationCommand { get; }
+        public ICommand CancelReservationCommand { get; }
 
-        public ReservationViewModel(IGuestService guestService, IRoomService roomService, IReservationService reservationService)
+        public ReservationViewModel(
+            IReservationService reservationService,
+            IGuestService guestService,
+            IRoomService roomService)
         {
+            _reservationService = reservationService;
             _guestService = guestService;
             _roomService = roomService;
-            _reservationService = reservationService;
 
-            AddReservationCommand = new RelayCommand(AddReservation);
+            LoadReservationsCommand = new RelayCommand(async _=> await LoadReservations());
+            AddReservationCommand = new RelayCommand(async _=> await AddReservation());
+            UpdateReservationCommand = new RelayCommand(async _ => await UpdateReservation());
+            CancelReservationCommand = new RelayCommand(async _=> await CancelReservation());
 
-            LoadData();
+            LoadInitialData();
         }
 
-        private void LoadData()
+        private async void LoadInitialData()
         {
-            Guests.Clear();
-            foreach (var guest in _guestService.GetAllGuests())
-                Guests.Add(guest);
-
-            Rooms.Clear();
-            foreach (var room in _roomService.GetAllRooms())
-                Rooms.Add(room);
+            await LoadReservations();
+            await LoadGuests();
+            await LoadRooms();
         }
 
-        private void AddReservation()
+        private async Task LoadReservations()
         {
-            if (SelectedGuest == null || SelectedHotelRoom == null) return;
-
-            var reservation = new Reservation
+            var reservations = await _reservationService.GetAllReservations();
+            Reservations.Clear();
+            foreach (var reservation in reservations)
             {
-                Guest = SelectedGuest,
-                HotelRoom = SelectedHotelRoom,
-                CheckInDate = CheckInDate,
-                CheckOutDate = CheckOutDate
-            };
+                Reservations.Add(reservation);
+            }
+        }
 
-            _reservationService.AddReservation(reservation);
+        private async Task LoadGuests()
+        {
+            var guests = await _guestService.GetAllGuests();
+            Guests.Clear();
+            foreach (var guest in guests)
+            {
+                Guests.Add(guest);
+            }
+        }
+
+        private async Task LoadRooms()
+        {
+            var rooms = await _roomService.GetAllRooms();
+            Rooms.Clear();
+            foreach (var room in rooms)
+            {
+                Rooms.Add(room);
+            }
+        }
+
+        private async Task AddReservation()
+        {
+            if (SelectedReservation?.Guest == null || SelectedReservation?.Room == null) 
+                return;
+
+            await _reservationService.CreateReservation(SelectedReservation);
+            await LoadReservations();
+            SelectedReservation = new Reservation();
+        }
+
+        private async Task UpdateReservation()
+        {
+            if (SelectedReservation?.ReservationId == 0) return;
+            
+            await _reservationService.UpdateReservation(SelectedReservation);
+            await LoadReservations();
+        }
+
+        private async Task CancelReservation()
+        {
+            if (SelectedReservation?.ReservationId == 0) return;
+            
+            await _reservationService.CancelReservation(SelectedReservation.ReservationId);
+            await LoadReservations();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
+}

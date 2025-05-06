@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace hotel_restoraunt.Models
 {
-    public class Guest
+    public class Customer
     {
-        public int GuestId { get; set; }
+        public int CustomerId { get; set; }
         
         [Required]
         public string FirstName { get; set; }
@@ -12,11 +12,8 @@ namespace hotel_restoraunt.Models
         [Required]
         public string LastName { get; set; }
         
-        [Required]
-        public string PassportNumber { get; set; }
-        
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
-        public DateTime RegistrationDate { get; set; } = DateTime.Now;
+        public int VisitCount { get; set; } = 0;
     }
 }

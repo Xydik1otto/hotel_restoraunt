@@ -1,64 +1,90 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using hotel_restoraunt.Commands;
 using hotel_restoraunt.Models;
 using hotel_restoraunt.Services.Interfaces;
-using System.Windows.Input;
 using System.Runtime.CompilerServices;
 
-
-namespace hotel_restoraunt.ViewModels;
-
-public class GuestViewModel : INotifyPropertyChanged
+namespace hotel_restoraunt.ViewModels
 {
-    private readonly IGuestService _guestService;
-
-    public ObservableCollection<Guest> Guests { get; set; } = new ObservableCollection<Guest>();
-
-    private Guest _newGuest = new Guest();
-    public Guest NewGuest
+    public class GuestViewModel : INotifyPropertyChanged
     {
-        get => _newGuest;
-        set
+        private readonly IGuestService _guestService;
+
+        public ObservableCollection<Guest> Guests { get; } = new();
+
+        private Guest _selectedGuest = new();
+        public Guest SelectedGuest
         {
-            _newGuest = value;
-            OnPropertyChanged();
+            get => _selectedGuest;
+            set
+            {
+                _selectedGuest = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
-    public ICommand AddGuestCommand { get; }
+        public ICommand LoadGuestsCommand { get; }
+        public ICommand AddGuestCommand { get; }
+        public ICommand UpdateGuestCommand { get; }
+        public ICommand DeleteGuestCommand { get; }
 
-    public GuestViewModel(IGuestService guestService)
-    {
-        _guestService = guestService;
-
-        AddGuestCommand = new RelayCommand(AddGuest);
-        LoadGuests();
-    }
-
-    private void AddGuest()
-    {
-        _guestService.AddGuest(NewGuest);
-        Guests.Add(new Guest
+        public GuestViewModel(IGuestService guestService)
         {
-            Name = NewGuest.Name,
-            Email = NewGuest.Email
-        });
-        NewGuest = new Guest(); // очистка форми
-    }
+            _guestService = guestService;
 
-    private void LoadGuests()
-    {
-        Guests.Clear();
-        foreach (var guest in _guestService.GetAllGuests())
-        {
-            Guests.Add(guest);
+            LoadGuestsCommand = new RelayCommand(async _=> await LoadGuests());
+            AddGuestCommand = new RelayCommand(async _=> await AddGuest());
+            UpdateGuestCommand = new RelayCommand(async _=> await UpdateGuest());
+            DeleteGuestCommand = new RelayCommand(async _ => await DeleteGuest());
+
+            LoadGuests();
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private async Task LoadGuests()
+        {
+            var guests = await _guestService.GetAllGuests();
+            Guests.Clear();
+            foreach (var guest in guests)
+            {
+                Guests.Add(guest);
+            }
+        }
+
+        private async Task AddGuest()
+        {
+            if (string.IsNullOrEmpty(SelectedGuest.FirstName) || 
+                string.IsNullOrEmpty(SelectedGuest.LastName))
+                return;
+
+            await _guestService.AddGuest(SelectedGuest);
+            await LoadGuests();
+            SelectedGuest = new Guest();
+        }
+
+        private async Task UpdateGuest()
+        {
+            if (SelectedGuest.GuestId == 0) return;
+            
+            await _guestService.UpdateGuest(SelectedGuest);
+            await LoadGuests();
+        }
+
+        private async Task DeleteGuest()
+        {
+            if (SelectedGuest.GuestId == 0) return;
+            
+            await _guestService.DeleteGuest(SelectedGuest.GuestId);
+            await LoadGuests();
+            SelectedGuest = new Guest();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

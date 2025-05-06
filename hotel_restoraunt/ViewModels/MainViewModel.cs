@@ -1,22 +1,14 @@
-// ViewModels/MainViewModel.cs
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using hotel_restoraunt.Commands;
-using hotel_restoraunt.Models;
-using hotel_restoraunt.Services;
+// Додайте ці using-директиви:
+using hotel_restoraunt.Services.Implementations;
+using hotel_restoraunt.Services.Interfaces;
+using hotel_restoraunt.ViewModel.Base;
 
-
-namespace hotel_restoraunt.ViewModels
+public class MainViewModel : ViewModelBase
 {
-    public class MainWindowViewModel
+    private readonly IRoomService _roomService;
+    
+    public MainViewModel(IRoomService roomService)
     {
-        public ObservableCollection<HotelRoom> Rooms { get; }
-        private readonly RoomService _roomService;
-
-        public MainWindowViewModel(RoomService roomService)
-        {
-            _roomService = roomService;
-            Rooms = new ObservableCollection<HotelRoom>(_roomService.GetAllRooms());
-        }
+        _roomService = roomService;
     }
 }

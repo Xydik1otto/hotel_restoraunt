@@ -3,8 +3,10 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using hotel_restoraunt.Commands;
-using hotel_restoraunt.Services;
+using hotel_restoraunt.Services.Implementations;
 using hotel_restoraunt.Views;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace hotel_restoraunt.ViewModels;
 
@@ -30,20 +32,19 @@ public class LoginViewModel : INotifyPropertyChanged
     protected void OnPropertyChanged([CallerMemberName] string name = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     
-    public ICommand LoginCommand => new RelayCommand(Login);
+    public ICommand LoginCommand { get; }
+    
+    public LoginViewModel()
+    {
+        LoginCommand = new RelayCommand(_ => Login());
+    }
+    
 
     private void Login()
     {
-        if (Username == "admin" && Password == "admin")
-        {
-            // Перехід до головного вікна
-            var mainViewModel = new MainWindowViewModel(new RoomService());
-            var mainWindow = new MainWindow { DataContext = mainViewModel };
-            mainWindow.Show();
-
-            // Закриваємо поточне вікно
-            Application.Current.Windows[0]?.Close();
-        }
+        var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
+        mainWindow.Show();
+        Application.Current.Windows[0]?.Close();
     }
 }
 

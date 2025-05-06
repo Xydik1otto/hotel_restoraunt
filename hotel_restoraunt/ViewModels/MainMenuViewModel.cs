@@ -1,11 +1,12 @@
 using hotel_restoraunt.Commands;
-using hotel_restoraunt.Views;
 using System.Windows.Input;
-using System.Runtime.CompilerServices;
+using hotel_restoraunt.ViewModel.Base;
+using hotel_restoraunt.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace hotel_restoraunt.ViewModels;
 
-public class MainMenuViewModel
+public class MainMenuViewModel : ViewModelBase
 {
     public ICommand OpenReservationsViewCommand { get; }
     public ICommand OpenUsersViewCommand { get; }
@@ -14,33 +15,33 @@ public class MainMenuViewModel
 
     public MainMenuViewModel()
     {
-        OpenReservationsViewCommand = new RelayCommand(OpenReservationsView);
-        OpenUsersViewCommand = new RelayCommand(OpenUsersView);
-        OpenRoomsViewCommand = new RelayCommand(OpenRoomsView);
-        OpenGuestsViewCommand = new RelayCommand(OpenGuestsView);
+        OpenReservationsViewCommand = new RelayCommand(_ => OpenReservationsView());
+        OpenUsersViewCommand = new RelayCommand(_ => OpenUsersView());
+        OpenRoomsViewCommand = new RelayCommand(_ => OpenRoomsView());
+        OpenGuestsViewCommand = new RelayCommand(_ => OpenGuestsView());
     }
 
     private void OpenReservationsView()
     {
-        var reservationsView = new ReservationView();
+        var reservationsView = App.ServiceProvider.GetRequiredService<ReservationView>();
         reservationsView.Show();
     }
 
     private void OpenUsersView()
     {
-        var usersView = new UserView();
+        var usersView = App.ServiceProvider.GetRequiredService<UserView>();
         usersView.Show();
     }
 
     private void OpenRoomsView()
     {
-        var roomsView = new RoomView();
+        var roomsView = App.ServiceProvider.GetRequiredService<RoomView>();
         roomsView.Show();
     }
 
     private void OpenGuestsView()
     {
-        var guestsView = new GuestView();
+        var guestsView = App.ServiceProvider.GetRequiredService<GuestView>();
         guestsView.Show();
     }
 }

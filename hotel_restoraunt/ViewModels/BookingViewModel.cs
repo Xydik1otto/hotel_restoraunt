@@ -1,70 +1,125 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Runtime.CompilerServices;
 using hotel_restoraunt.Commands;
 using hotel_restoraunt.Models;
-using hotel_restoraunt.Services;
 using hotel_restoraunt.Services.Interfaces;
+using System.Runtime.CompilerServices;
 
-namespace hotel_restoraunt.ViewModels;
-
-public class BookingViewModel : INotifyPropertyChanged
+namespace hotel_restoraunt.ViewModels
 {
-    private readonly IBookingService _bookingService;
-
-    private ObservableCollection<Booking> _bookings;
-    public ObservableCollection<Booking> Bookings
+    public class BookingViewModel : INotifyPropertyChanged
     {
-        get => _bookings;
-        set
+        private readonly IBookingService _bookingService;
+        private readonly IGuestService _guestService;
+        private readonly IRoomService _roomService;
+
+        public ObservableCollection<Booking> Bookings { get; } = new();
+        public ObservableCollection<Guest> Guests { get; } = new();
+        public ObservableCollection<HotelRoom> Rooms { get; } = new();
+
+        private Booking _selectedBooking = new();
+        public Booking SelectedBooking
         {
-            _bookings = value;
-            OnPropertyChanged();
+            get => _selectedBooking;
+            set
+            {
+                _selectedBooking = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
-    private Booking _selectedBooking;
-    public Booking SelectedBooking
-    {
-        get => _selectedBooking;
-        set
+        public ICommand LoadBookingsCommand { get; }
+        public ICommand AddBookingCommand { get; }
+        public ICommand UpdateBookingCommand { get; }
+        public ICommand DeleteBookingCommand { get; }
+
+        public BookingViewModel(
+            IBookingService bookingService,
+            IGuestService guestService,
+            IRoomService roomService)
         {
-            _selectedBooking = value;
-            OnPropertyChanged();
+            _bookingService = bookingService;
+            _guestService = guestService;
+            _roomService = roomService;
+
+            LoadBookingsCommand = new RelayCommand(async _ => await LoadBookings());
+            AddBookingCommand = new RelayCommand(async _ => await AddBooking());
+            UpdateBookingCommand = new RelayCommand(async _ => await UpdateBooking());
+            DeleteBookingCommand = new RelayCommand(async _ => await DeleteBooking());
+
+            LoadInitialData();
         }
-    }
 
-    public ICommand LoadBookingsCommand { get; }
-    public ICommand DeleteBookingCommand { get; }
+        private async void LoadInitialData()
+        {
+            await LoadBookings();
+            await LoadGuests();
+            await LoadRooms();
+        }
 
-    public BookingViewModel(IBookingService bookingService)
-    {
-        _bookingService = bookingService;
+        private async Task LoadBookings()
+        {
+            var bookings = await _bookingService.GetAllBookings();
+            Bookings.Clear();
+            foreach (var booking in bookings)
+            {
+                Bookings.Add(booking);
+            }
+        }
+
+        private async Task LoadGuests()
+        {
+            var guests = await _guestService.GetAllGuests();
+            Guests.Clear();
+            foreach (var guest in guests)
+            {
+                Guests.Add(guest);
+            }
+        }
+
+        private async Task LoadRooms()
+        {
+            var rooms = await _roomService.GetAllRooms();
+            Rooms.Clear();
+            foreach (var room in rooms)
+            {
+                Rooms.Add(room);
+            }
+        }
+
+        private async Task AddBooking()
+        {
+            if (SelectedBooking?.Guest == null || SelectedBooking?.Room == null)
+                return;
+
+            await _bookingService.CreateBooking(SelectedBooking);
+            await LoadBookings();
+            SelectedBooking = new Booking();
+        }
+
+        private async Task UpdateBooking()
+        {
+            if (SelectedBooking?.BookingId == 0) return;
             
-        LoadBookingsCommand = new RelayCommand(async () => await LoadBookings());
-        DeleteBookingCommand = new RelayCommand(async () => await DeleteBooking());
-    }
-
-    private async Task LoadBookings()
-    {
-        var bookings = await _bookingService.GetAllBookings();
-        Bookings = new ObservableCollection<Booking>(bookings);
-    }
-
-    private async Task DeleteBooking()
-    {
-        if (SelectedBooking != null)
-        {
-            await _bookingService.DeleteBooking(SelectedBooking.Id);
+            await _bookingService.UpdateBooking(SelectedBooking);
             await LoadBookings();
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-        
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private async Task DeleteBooking()
+        {
+            if (SelectedBooking?.BookingId == 0) return;
+            
+            await _bookingService.DeleteBooking(SelectedBooking.BookingId);
+            await LoadBookings();
+            SelectedBooking = new Booking();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -23,26 +23,35 @@
             <DependentUpon>App.xaml</DependentUpon>
         </Compile>
         <Compile Include="Commands\RelayCommand.cs" />
+        <Compile Include="Data\DatabaseContext.cs" />
         <Compile Include="Data\DatabaseHelper.cs" />
+        <Compile Include="Data\Interfaces\IUnitOfWork.cs" />
         <Compile Include="Data\Repositories\HotelRoomRepository.cs" />
+        <Compile Include="Data\UnitOfWork.cs" />
         <Compile Include="Models\Booking.cs" />
         <Compile Include="Models\Cleaner.cs" />
+        <Compile Include="Models\Customer.cs" />
         <Compile Include="Models\Enums\RoomType.cs" />
         <Compile Include="Models\Guest.cs" />
+        <Compile Include="Models\MenuCategory.cs" />
+        <Compile Include="Models\MenuItem.cs" />
         <Compile Include="Models\Reservation.cs" />
+        <Compile Include="Models\RestorauntTable.cs" />
         <Compile Include="Models\User.cs" />
-        <Compile Include="Services\BookingService.cs" />
         <Compile Include="Services\DTOs\ReservationDTO.cs" />
-        <Compile Include="Services\GuestService.cs" />
         <Compile Include="Services\HotelService.cs" />
+        <Compile Include="Services\Implementations\BookingService.cs" />
+        <Compile Include="Services\Implementations\GuestService.cs" />
+        <Compile Include="Services\Implementations\ReservationService.cs" />
+        <Compile Include="Services\Implementations\UserService.cs" />
         <Compile Include="Services\Interfaces\IBookingService.cs" />
         <Compile Include="Services\Interfaces\IGuestService.cs" />
+        <Compile Include="Services\Interfaces\IMenuItemService.cs" />
         <Compile Include="Services\Interfaces\IReservationService.cs" />
         <Compile Include="Services\Interfaces\IRoomService.cs" />
         <Compile Include="Services\Interfaces\IUserService.cs" />
-        <Compile Include="Services\ReservationService.cs" />
+        <Compile Include="Services\MenuItemService.cs" />
         <Compile Include="Services\RoomService.cs" />
-        <Compile Include="Services\UserService.cs" />
         <Compile Include="ViewModels\Base\ViewModelBase.cs" />
         <Compile Include="ViewModels\BookingViewModel.cs" />
         <Compile Include="ViewModels\GuestViewModel.cs" />
@@ -74,6 +83,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
       <Page Include="Views\BookingView.xaml" />
       <Page Include="Views\GuestView.xaml" />
       <Page Include="Views\LoginView.xaml" />
@@ -90,7 +105,6 @@
 
     <ItemGroup>
       <Folder Include="Extensions\" />
-      <Folder Include="Services\Implementations\" />
       <Folder Include="Utilities\" />
       <Folder Include="Views\Components\" />
     </ItemGroup>
@@ -98,11 +112,14 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="14.0.0" />
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Dapper" Version="2.1.66" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
       <PackageReference Include="MySql.Data" Version="9.3.0" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
