@@ -3,7 +3,7 @@ using hotel_restoraunt.Data.Interfaces;
 using hotel_restoraunt.Models;
 using hotel_restoraunt.Services.Interfaces;
 
-namespace hotel_restoraunt.Services.Implementations
+namespace hotel_restoraunt.Services
 {
     public class RoomService : IRoomService
     {

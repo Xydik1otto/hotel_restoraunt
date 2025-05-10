@@ -27,8 +27,8 @@ namespace hotel_restoraunt.Services.Implementations
                 sql,
                 (booking, guest, room) =>
                 {
-                    booking.Guest = guest;
-                    booking.Room = room;
+                    booking.GuestId = Convert.ToInt32(guest.ToString());
+                    booking.RoomId = Convert.ToInt32(room.ToString());
                     return booking;
                 },
                 splitOn: "guest_id,room_id");
@@ -48,8 +48,8 @@ namespace hotel_restoraunt.Services.Implementations
                 sql,
                 (booking, guest, room) =>
                 {
-                    booking.Guest = guest;
-                    booking.Room = room;
+                    booking.GuestId = Convert.ToInt32(guest.ToString());
+                    booking.RoomId = Convert.ToInt32(room.ToString());
                     return booking;
                 },
                 new { Id = id },
@@ -108,8 +108,8 @@ namespace hotel_restoraunt.Services.Implementations
                 sql,
                 (booking, guest, room) =>
                 {
-                    booking.Guest = guest;
-                    booking.Room = room;
+                    booking.GuestId = Convert.ToInt32(guest.ToString());
+                    booking.RoomId = Convert.ToInt32(room.ToString());
                     return booking;
                 },
                 splitOn: "guest_id,room_id");

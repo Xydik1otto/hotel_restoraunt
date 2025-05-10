@@ -1,50 +1,123 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using hotel_restoraunt.Commands;
-using hotel_restoraunt.Services.Implementations;
+using hotel_restoraunt.Services.Interfaces;
 using hotel_restoraunt.Views;
 using Microsoft.Extensions.DependencyInjection;
 
-
-namespace hotel_restoraunt.ViewModels;
-
-public class LoginViewModel : INotifyPropertyChanged
+namespace hotel_restoraunt.ViewModels
 {
-    private string _username;
-    private string _password;
-
-    public string Username
+    public class LoginViewModel : ViewModelBase
     {
-        get => _username;
-        set { _username = value; OnPropertyChanged(); }
-    }
+        private readonly IUserService _userService;
+        private readonly IServiceProvider _serviceProvider;
+        
+        private string _username;
+        private string _errorMessage;
+        private bool _hasError;
 
-    public string Password
-    {
-        get => _password;
-        set { _password = value; OnPropertyChanged(); }
-    }
+        public string Username
+        {
+            get => _username;
+            set
+            {
+                _username = value;
+                OnPropertyChanged();
+            }
+        }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged();
+                HasError = !string.IsNullOrEmpty(value);
+            }
+        }
 
-    protected void OnPropertyChanged([CallerMemberName] string name = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    
-    public ICommand LoginCommand { get; }
-    
-    public LoginViewModel()
-    {
-        LoginCommand = new RelayCommand(_ => Login());
-    }
-    
+        public bool HasError
+        {
+            get => _hasError;
+            set
+            {
+                _hasError = value;
+                OnPropertyChanged();
+            }
+        }
 
-    private void Login()
-    {
-        var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
-        mainWindow.Show();
-        Application.Current.Windows[0]?.Close();
+        public ICommand LoginCommand { get; }
+        public ICommand GuestLoginCommand { get; }
+
+        // Події, які сигналізують про успішний вхід
+        public event EventHandler LoginSuccessful;
+        public event EventHandler GuestLoginSuccessful;
+
+        public LoginViewModel(IUserService userService, IServiceProvider serviceProvider)
+        {
+            _userService = userService;
+            _serviceProvider = serviceProvider;
+            
+            LoginCommand = new RelayCommand<PasswordBox>(Login);
+            GuestLoginCommand = new RelayCommand(LoginAsGuest);
+        }
+
+        private void Login(PasswordBox passwordBox)
+        {
+            if (string.IsNullOrWhiteSpace(Username))
+            {
+                ErrorMessage = "Будь ласка, введіть логін";
+                return;
+            }
+
+            if (passwordBox == null || string.IsNullOrWhiteSpace(passwordBox.Password))
+            {
+                ErrorMessage = "Будь ласка, введіть пароль";
+                return;
+            }
+
+            // Перевірка логіну та пароля (тут можна додати перевірку з бази даних)
+            if (Username.ToLower() == "admin" && passwordBox.Password == "admin")
+            {
+                // Відкриття панелі адміністратора
+                var adminPanel = _serviceProvider.GetRequiredService<AdminPanel>();
+                adminPanel.Show();
+                
+                // Запускаємо подію успішного входу
+                LoginSuccessful?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                // Перевірка звичайного користувача через сервіс
+                var isValidUser = _userService.ValidateUser(Username, passwordBox.Password);
+                
+                if (isValidUser)
+                {
+                    // Відкриття основного вікна для зареєстрованого користувача
+                    var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                    mainWindow.Show();
+                    
+                    // Запускаємо подію успішного входу
+                    LoginSuccessful?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    ErrorMessage = "Невірний логін або пароль";
+                }
+            }
+        }
+
+        private void LoginAsGuest()
+        {
+            // Відкриття основного вікна для гостя
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
+            
+            // Запускаємо подію успішного входу в режимі гостя
+            GuestLoginSuccessful?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
-

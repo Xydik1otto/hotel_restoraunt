@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0-windows</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <LangVersion>latest</LangVersion>
         <UseWPF>true</UseWPF>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -22,42 +22,60 @@
         <Compile Include="App.xaml.cs">
             <DependentUpon>App.xaml</DependentUpon>
         </Compile>
+        <Compile Include="Commands\AsyncRelayCommand.cs" />
         <Compile Include="Commands\RelayCommand.cs" />
+        <Compile Include="Data\DatabaseConfig.cs" />
         <Compile Include="Data\DatabaseContext.cs" />
-        <Compile Include="Data\DatabaseHelper.cs" />
+        <Compile Include="Data\DatabaseInitializer.cs" />
+        <Compile Include="Data\DatabaseService.cs" />
+        <Compile Include="Data\Interfaces\IBookingRepository.cs" />
+        <Compile Include="Data\Interfaces\IGuestRepository.cs" />
+        <Compile Include="Data\Interfaces\IMenuItemRepository.cs" />
+        <Compile Include="Data\Interfaces\IOrderRepository.cs" />
+        <Compile Include="Data\Interfaces\IRepository.cs" />
+        <Compile Include="Data\Interfaces\IRoomRepository.cs" />
+        <Compile Include="Data\Interfaces\ITableRepository.cs" />
         <Compile Include="Data\Interfaces\IUnitOfWork.cs" />
+        <Compile Include="Data\Interfaces\IUserRepository.cs" />
+        <Compile Include="Data\Repositories\BaseRepository.cs" />
         <Compile Include="Data\Repositories\HotelRoomRepository.cs" />
+        <Compile Include="Data\Repositories\MenuItemRepository.cs" />
+        <Compile Include="Data\Repositories\OrderRepository.cs" />
+        <Compile Include="Data\Repositories\RoomRepository.cs" />
+        <Compile Include="Data\Repositories\UserRepository.cs" />
         <Compile Include="Data\UnitOfWork.cs" />
+        <Compile Include="Helpers\ConfigurationHelper.cs" />
         <Compile Include="Models\Booking.cs" />
         <Compile Include="Models\Cleaner.cs" />
         <Compile Include="Models\Customer.cs" />
+        <Compile Include="Models\EntityBase.cs" />
         <Compile Include="Models\Enums\RoomType.cs" />
         <Compile Include="Models\Guest.cs" />
         <Compile Include="Models\MenuCategory.cs" />
         <Compile Include="Models\MenuItem.cs" />
+        <Compile Include="Models\Order.cs" />
         <Compile Include="Models\Reservation.cs" />
         <Compile Include="Models\RestorauntTable.cs" />
+        <Compile Include="Models\Room.cs" />
+        <Compile Include="Models\Table.cs" />
         <Compile Include="Models\User.cs" />
         <Compile Include="Services\DTOs\ReservationDTO.cs" />
         <Compile Include="Services\HotelService.cs" />
         <Compile Include="Services\Implementations\BookingService.cs" />
         <Compile Include="Services\Implementations\GuestService.cs" />
+        <Compile Include="Services\Implementations\LoggerService.cs" />
         <Compile Include="Services\Implementations\ReservationService.cs" />
         <Compile Include="Services\Implementations\UserService.cs" />
         <Compile Include="Services\Interfaces\IBookingService.cs" />
         <Compile Include="Services\Interfaces\IGuestService.cs" />
+        <Compile Include="Services\Interfaces\ILoggerService.cs" />
         <Compile Include="Services\Interfaces\IMenuItemService.cs" />
         <Compile Include="Services\Interfaces\IReservationService.cs" />
         <Compile Include="Services\Interfaces\IRoomService.cs" />
+        <Compile Include="Services\Interfaces\IService.cs" />
         <Compile Include="Services\Interfaces\IUserService.cs" />
         <Compile Include="Services\MenuItemService.cs" />
         <Compile Include="Services\RoomService.cs" />
-        <Compile Include="ViewModels\Base\ViewModelBase.cs" />
-        <Compile Include="ViewModels\BookingViewModel.cs" />
-        <Compile Include="ViewModels\GuestViewModel.cs" />
-        <Compile Include="ViewModels\LoginViewModel.cs" />
-        <Compile Include="ViewModels\MainMenuViewModel.cs" />
-        <Compile Include="ViewModels\MainViewModel.cs" />
         <Compile Include="Models\HotelRoom.cs" />
 
         <!-- WPF ресурси -->
@@ -65,17 +83,14 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
-        <Compile Include="ViewModels\ReservationViewModel.cs" />
-        <Compile Include="ViewModels\RoomViewModel.cs" />
-        <Compile Include="ViewModels\UserViewModel.cs" />
-        <Compile Include="Views\BookingView.xaml.cs" />
-        <Compile Include="Views\GuestView.xaml.cs" />
-        <Compile Include="Views\LoginView.xaml.cs" />
-        <Compile Include="Views\MainMenuView.xaml.cs" />
+        <Compile Include="Views\AdminPanel.xaml.cs" />
+        <Compile Include="Views\DatabaseSettingsWindow.xaml.cs" />
+        <Compile Include="Views\LoginWindow.xaml.cs" />
         <Compile Include="Views\MainWindow.xaml.cs" />
-        <Compile Include="Views\ReservationView.xaml.cs" />
-        <Compile Include="Views\RoomView.xaml.cs" />
-        <Compile Include="Views\UserView.xaml.cs" />
+        <Compile Include="Views\ViewModels\AdminViewModel.cs" />
+        <Compile Include="Views\ViewModels\LoginViewModel.cs" />
+        <Compile Include="Views\ViewModels\MainViewModel.cs" />
+        <Compile Include="Views\ViewModels\ViewModelBase.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -89,24 +104,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Page Include="Views\BookingView.xaml" />
-      <Page Include="Views\GuestView.xaml" />
-      <Page Include="Views\LoginView.xaml" />
-      <Page Include="Views\MainMenuView.xaml" />
-      <Page Include="Views\MainWindow.xaml">
-        <Generator>MSBuild:Compile</Generator>
-        <XamlRuntime>Wpf</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
-      <Page Include="Views\ReservationView.xaml" />
-      <Page Include="Views\RoomView.xaml" />
-      <Page Include="Views\UserView.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Extensions\" />
-      <Folder Include="Utilities\" />
-      <Folder Include="Views\Components\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -123,6 +121,13 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
       <PackageReference Include="MySql.Data" Version="9.3.0" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Include="Views\AdminPanel.xaml" />
+      <Page Include="Views\DatabaseSettingsWindow.xaml" />
+      <Page Include="Views\LoginWindow.xaml" />
+      <Page Include="Views\MainWindow.xaml" />
     </ItemGroup>
 
 </Project>

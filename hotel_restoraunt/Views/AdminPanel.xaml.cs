@@ -4,15 +4,15 @@ using hotel_restoraunt.Views.ViewModels;
 namespace hotel_restoraunt.Views
 {
     /// <summary>
-    /// Логіка взаємодії для MainWindow.xaml
+    /// Логіка взаємодії для AdminPanel.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AdminPanel : Window
     {
-        public MainWindow(MainViewModel viewModel)
+        public AdminPanel(AdminViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
-
+            
             // Підписка на подію виходу для закриття вікна
             viewModel.LogoutRequested += (sender, args) => Close();
         }

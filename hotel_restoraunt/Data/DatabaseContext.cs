@@ -1,40 +1,52 @@
-// Data/DatabaseContext.cs
-using Dapper;
-using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+// hotel_restoraunt/Data/DatabaseContext.cs
+using System;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace hotel_restoraunt.Data
 {
     public class DatabaseContext
     {
-        private readonly IConfiguration _config;
-        private readonly string _connectionString;
-
-        public DatabaseContext(IConfiguration config)
+        private readonly DatabaseConfig _config;
+        
+        public DatabaseContext()
         {
-            _config = config;
-            _connectionString = _config.GetConnectionString("DefaultConnection");
+            _config = DatabaseConfig.LoadConfig();
         }
-
-        public IDbConnection CreateConnection() => new MySqlConnection(_connectionString);
-
-        public async Task InitDatabase()
+        
+        public IDbConnection CreateConnection()
         {
-            using var connection = CreateConnection();
-            await _initTables();
-            
-            async Task _initTables()
+            var connection = new MySqlConnection(_config.ConnectionString);
+            if (connection.State == ConnectionState.Closed)
             {
-                // Перевірка ініціалізації таблиць
-                var sql = """
-                          SELECT COUNT(*) FROM information_schema.tables 
-                          WHERE table_schema = 'kursova' 
-                          AND table_name IN ('hotel_rooms', 'hotel_guests', 'hotel_bookings');
-                          """;
-                
-                var count = await connection.ExecuteScalarAsync<int>(sql);
-                if (count < 3) throw new Exception("Database tables not properly initialized");
+                connection.Open();
+            }
+            return connection;
+        }
+        
+        public async Task<int> SaveChangesAsync()
+        {
+            // У реалізації з Dapper це місце може бути використано для додаткової логіки
+            // збереження змін або логування
+            return await Task.FromResult(1);
+        }
+        
+        public void TestConnection()
+        {
+            try
+            {
+                using (var connection = CreateConnection())
+                {
+                    bool result = connection.State == ConnectionState.Open;
+                    if (!result)
+                    {
+                        throw new Exception("Не вдалося відкрити з'єднання з базою даних");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Помилка підключення до бази даних: {ex.Message}", ex);
             }
         }
     }
