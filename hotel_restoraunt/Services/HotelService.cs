@@ -6,9 +6,9 @@ namespace hotel_restoraunt.Services
 {
     public class HotelService
     {
-        private readonly List<Room> _rooms = new List<Room>();
+        private readonly List<HotelRoom> _rooms = new List<HotelRoom>();
 
-        public void AddRoom(Room room) => _rooms.Add(room);
-        public List<Room> GetAllRooms() => _rooms;
+        public void AddRoom(HotelRoom hotelRoom) => _rooms.Add(hotelRoom);
+        public List<HotelRoom> GetAllRooms() => _rooms;
     }
 }

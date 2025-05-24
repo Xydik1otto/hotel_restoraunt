@@ -1,92 +1,133 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{44DD812E-6763-4B58-8D89-1073A51F1254}</ProjectGuid>
         <OutputType>WinExe</OutputType>
-        <RootNamespace>hotel_restoraunt</RootNamespace>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>disable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <UseWPF>true</UseWPF>
+        <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>hotel_restoraunt</AssemblyName>
-        <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-        <WarningLevel>4</WarningLevel>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <RootNamespace>hotel_restoraunt</RootNamespace>
+        <Platforms>AnyCPU;x64</Platforms>
+
+        <!-- Вимкнути всі автоматичні включення -->
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        <EnableDefaultPageItems>false</EnableDefaultPageItems>
+        <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
+
     <ItemGroup>
-        <Reference Include="System"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Xml"/>
-        <Reference Include="System.Xaml">
-            <RequiredTargetFramework>4.0</RequiredTargetFramework>
-        </Reference>
-        <Reference Include="WindowsBase"/>
-        <Reference Include="PresentationCore"/>
-        <Reference Include="PresentationFramework"/>
-    </ItemGroup>
-    <ItemGroup>
+        <!-- Компільовані файли -->
+        <Compile Include="App.xaml.cs">
+            <DependentUpon>App.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Commands\AsyncRelayCommand.cs" />
+        <Compile Include="Commands\RelayCommand.cs" />
+        <Compile Include="Data\DatabaseConfig.cs" />
+        <Compile Include="Data\DatabaseContext.cs" />
+        <Compile Include="Data\DatabaseInitializer.cs" />
+        <Compile Include="Data\DatabaseService.cs" />
+        <Compile Include="Data\Interfaces\IBookingRepository.cs" />
+        <Compile Include="Data\Interfaces\IGuestRepository.cs" />
+        <Compile Include="Data\Interfaces\IMenuItemRepository.cs" />
+        <Compile Include="Data\Interfaces\IOrderRepository.cs" />
+        <Compile Include="Data\Interfaces\IRepository.cs" />
+        <Compile Include="Data\Interfaces\IRoomRepository.cs" />
+        <Compile Include="Data\Interfaces\ITableRepository.cs" />
+        <Compile Include="Data\Interfaces\IUnitOfWork.cs" />
+        <Compile Include="Data\Interfaces\IUserRepository.cs" />
+        <Compile Include="Data\Repositories\BaseRepository.cs" />
+        <Compile Include="Data\Repositories\HotelRoomRepository.cs" />
+        <Compile Include="Data\Repositories\MenuItemRepository.cs" />
+        <Compile Include="Data\Repositories\OrderRepository.cs" />
+        <Compile Include="Data\Repositories\RoomRepository.cs" />
+        <Compile Include="Data\Repositories\UserRepository.cs" />
+        <Compile Include="Data\UnitOfWork.cs" />
+        <Compile Include="Helpers\ConfigurationHelper.cs" />
+        <Compile Include="Models\Booking.cs" />
+        <Compile Include="Models\Cleaner.cs" />
+        <Compile Include="Models\Customer.cs" />
+        <Compile Include="Models\EntityBase.cs" />
+        <Compile Include="Models\Enums\RoomType.cs" />
+        <Compile Include="Models\Guest.cs" />
+        <Compile Include="Models\MenuCategory.cs" />
+        <Compile Include="Models\MenuItem.cs" />
+        <Compile Include="Models\Order.cs" />
+        <Compile Include="Models\Reservation.cs" />
+        <Compile Include="Models\RestorauntTable.cs" />
+        <Compile Include="Models\Room.cs" />
+        <Compile Include="Models\Table.cs" />
+        <Compile Include="Models\User.cs" />
+        <Compile Include="Services\DTOs\ReservationDTO.cs" />
+        <Compile Include="Services\HotelService.cs" />
+        <Compile Include="Services\Implementations\BookingService.cs" />
+        <Compile Include="Services\Implementations\GuestService.cs" />
+        <Compile Include="Services\Implementations\LoggerService.cs" />
+        <Compile Include="Services\Implementations\ReservationService.cs" />
+        <Compile Include="Services\Implementations\UserService.cs" />
+        <Compile Include="Services\Interfaces\IBookingService.cs" />
+        <Compile Include="Services\Interfaces\IGuestService.cs" />
+        <Compile Include="Services\Interfaces\ILoggerService.cs" />
+        <Compile Include="Services\Interfaces\IMenuItemService.cs" />
+        <Compile Include="Services\Interfaces\IReservationService.cs" />
+        <Compile Include="Services\Interfaces\IRoomService.cs" />
+        <Compile Include="Services\Interfaces\IService.cs" />
+        <Compile Include="Services\Interfaces\IUserService.cs" />
+        <Compile Include="Services\MenuItemService.cs" />
+        <Compile Include="Services\RoomService.cs" />
+        <Compile Include="Models\HotelRoom.cs" />
+
+        <!-- WPF ресурси -->
         <ApplicationDefinition Include="App.xaml">
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
-        <Compile Include="Commands\RelayCommand.cs" />
-        <Compile Include="Services\HotelService.cs" />
-        <Compile Include="ViewModels\MainViewModel.cs" />
-        <Page Include="MainWindow.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Compile Include="App.xaml.cs">
-            <DependentUpon>App.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Include="MainWindow.xaml.cs">
-            <DependentUpon>MainWindow.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
+        <Compile Include="Views\AdminPanel.xaml.cs" />
+        <Compile Include="Views\DatabaseSettingsWindow.xaml.cs" />
+        <Compile Include="Views\LoginWindow.xaml.cs" />
+        <Compile Include="Views\MainWindow.xaml.cs" />
+        <Compile Include="Views\ViewModels\AdminViewModel.cs" />
+        <Compile Include="Views\ViewModels\LoginViewModel.cs" />
+        <Compile Include="Views\ViewModels\MainViewModel.cs" />
+        <Compile Include="Views\ViewModels\ViewModelBase.cs" />
     </ItemGroup>
+
     <ItemGroup>
-        <Compile Include="Models\Room.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs">
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Include="Properties\Resources.Designer.cs">
-            <AutoGen>True</AutoGen>
-            <DesignTime>True</DesignTime>
-            <DependentUpon>Resources.resx</DependentUpon>
-        </Compile>
-        <EmbeddedResource Include="Properties\Resources.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
+        <None Include="App.config" />
     </ItemGroup>
+
     <ItemGroup>
-        <None Include="App.config"/>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
+
     <ItemGroup>
-      <Folder Include="Views\" />
+      <Folder Include="Extensions\" />
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Dapper" Version="2.1.66" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+      <PackageReference Include="MySql.Data" Version="9.3.0" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Include="Views\AdminPanel.xaml" />
+      <Page Include="Views\DatabaseSettingsWindow.xaml" />
+      <Page Include="Views\LoginWindow.xaml" />
+      <Page Include="Views\MainWindow.xaml" />
+    </ItemGroup>
+
 </Project>
